@@ -24,6 +24,8 @@ end
 # Constructor
 #
 
+# @param admin_address: admin for contract
+# @param oracle_controller_address: address of oracle controller
 @constructor
 func constructor{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     admin_address : felt, oracle_controller_address : felt
@@ -37,6 +39,13 @@ end
 # Getters
 #
 
+# @notice Given a quote currency Q and a base currency B returns the value of Q/B
+# @param quote_currency the quote currency: (ex. felt for ETH)
+# @param base_currency the base currency: (ex. felt for BTC)
+# @return value: the aggregated value
+# @return decimals: the number of decimals in the Entry
+# @return last_updated_timestamp: timestamp the Entries were last updated
+# @return num_sources_aggregated: number of sources used in aggregation
 @view
 func get_rebased_value{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     quote_currency : felt, base_currency : felt
@@ -79,6 +88,8 @@ func get_rebased_value{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_c
     return (0, decimals, last_updated_timestamp, num_sources_aggregated)
 end
 
+# @notice get address for admin
+# @return admin_address: returns admin's address
 @view
 func get_admin_address{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}() -> (
     admin_address : felt
@@ -87,6 +98,8 @@ func get_admin_address{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_c
     return (admin_address)
 end
 
+# @notice get oracle controller for admin
+# @return oracle_controller_address: address for oracle controller
 @view
 func get_oracle_controller_address{
     syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
@@ -99,6 +112,9 @@ end
 # Setters
 #
 
+# @notice update admin address
+# @dev only the admin can set the new address
+# @param new_address
 @external
 func set_admin_address{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     new_address : felt
@@ -108,6 +124,9 @@ func set_admin_address{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_c
     return ()
 end
 
+# @notice update oracle controller address
+# @dev only the admin can update this
+# @param oracle_controller_address: new oracle controller address
 @external
 func set_oracle_controller_address{
     syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
@@ -121,14 +140,24 @@ end
 # Helpers
 #
 
+# @dev converts a currency to an asset key 
+#      by constructing felt equivalent of "{currency}/{denominator}"
+# @param currency: the currency to be turned into an asset_key
+# @param denominator: the value the asset is denominated in 
+# @param denominator_bits: the number of bits needed to represent the denominator
+# @return asset_key: the asset key as felt of "{currency}/{denominator}"
 func _convert_currency_to_asset_key{range_check_ptr}(
-    currency : felt, asset : felt, asset_bits : felt
+    currency : felt, denominator : felt, denominator_bits : felt
 ) -> (asset_key : felt):
-    let (shifted) = _bitshift_left(currency, asset_bits)
-    let asset_key = shifted + asset
+    let (shifted) = _bitshift_left(currency, denominator_bits)
+    let asset_key = shifted + denominator
     return (asset_key)
 end
 
+# @dev left shifts value by specified number of bits
+# @param value: the value to be shifted
+# @param num_bits: the number of bits to shift by
+# @return shifted: the shifted felt
 func _bitshift_left{range_check_ptr}(value : felt, num_bits : felt) -> (shifted : felt):
     # Check for overflow?
     let (multiplier) = pow(2, num_bits)
@@ -136,6 +165,9 @@ func _bitshift_left{range_check_ptr}(value : felt, num_bits : felt) -> (shifted 
     return (shifted)
 end
 
+# @param a: the first felt
+# @param b: the second felt
+# @return min_val: the bigger felt
 func _max{range_check_ptr}(a : felt, b : felt) -> (max_val : felt):
     let (a_is_less) = is_le(a, b)
     if a_is_less == TRUE:
@@ -144,6 +176,9 @@ func _max{range_check_ptr}(a : felt, b : felt) -> (max_val : felt):
     return (a)
 end
 
+# @param a: the first felt
+# @param b: the second felt
+# @return min_val: the smaller felt
 func _min{range_check_ptr}(a : felt, b : felt) -> (min_val : felt):
     let (a_is_less) = is_le(a, b)
     if a_is_less == TRUE:
