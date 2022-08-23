@@ -79,6 +79,44 @@ func get_rebased_value{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_c
     return (0, decimals, last_updated_timestamp, num_sources_aggregated)
 end
 
+@view
+func get_admin_address{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}() -> (
+    admin_address : felt
+):
+    let (admin_address) = Admin.get_admin_address()
+    return (admin_address)
+end
+
+@view
+func get_oracle_controller_address{
+    syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
+}() -> (oracle_controller_address : felt):
+    let (oracle_controller_address) = oracle_controller_address_storage.read()
+    return (oracle_controller_address)
+end
+
+#
+# Setters
+#
+
+@external
+func set_admin_address{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    new_address : felt
+):
+    Admin.only_admin()
+    Admin.set_admin_address(new_address)
+    return ()
+end
+
+@external
+func set_oracle_controller_address{
+    syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
+}(oracle_controller_address : felt) -> ():
+    Admin.only_admin()
+    oracle_controller_address_storage.write(oracle_controller_address)
+    return ()
+end
+
 #
 # Helpers
 #
