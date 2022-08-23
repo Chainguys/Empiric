@@ -79,11 +79,6 @@ func get_rebased_value{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_c
     let (last_updated_timestamp) = _max(quote_last_updated_timestamp, base_last_updated_timestamp)
     let (num_sources_aggregated) = _max(quote_num_sources_aggregated, base_num_sources_aggregated)
 
-    # Prevent division by zero
-    if base_value == 0:
-        return (0, decimals, last_updated_timestamp, num_sources_aggregated)
-    end
-
     # TODO: Do conversion
     return (0, decimals, last_updated_timestamp, num_sources_aggregated)
 end
@@ -140,10 +135,10 @@ end
 # Helpers
 #
 
-# @dev converts a currency to an asset key 
+# @dev converts a currency to an asset key
 #      by constructing felt equivalent of "{currency}/{denominator}"
 # @param currency: the currency to be turned into an asset_key
-# @param denominator: the value the asset is denominated in 
+# @param denominator: the value the asset is denominated in
 # @param denominator_bits: the number of bits needed to represent the denominator
 # @return asset_key: the asset key as felt of "{currency}/{denominator}"
 func _convert_currency_to_asset_key{range_check_ptr}(
@@ -152,6 +147,22 @@ func _convert_currency_to_asset_key{range_check_ptr}(
     let (shifted) = _bitshift_left(currency, denominator_bits)
     let asset_key = shifted + denominator
     return (asset_key)
+end
+
+# @dev Rounds value given the divisor and remainder of a division
+# @param value: the value to be rounded
+# @param divisor: the divisor of the division
+# @param remainder: the remainder of the division
+# @return shifted: the rounded felt
+func _round_after_div{range_check_ptr}(value : felt, divisor : felt, remainder : felt) -> (
+    rounded : felt
+):
+    let doubled = remainder * 2
+    let (doubled_is_less) = is_le(doubled, divisor)
+    if doubled_is_less == FALSE:
+        return (value + 1)
+    end
+    return (value)
 end
 
 # @dev left shifts value by specified number of bits
