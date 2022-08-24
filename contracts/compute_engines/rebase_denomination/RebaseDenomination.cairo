@@ -164,8 +164,8 @@ func _decimal_div{range_check_ptr}(a_value, a_decimals, b_value, b_decimals) -> 
     local a_to_shift = a_value
     local result_decimals
     # Use that (a * 10^x) / (b * 10^y) = (a / b) * 10^(x - y)
-    let (b_less_dec) = is_le(b_decimals, a_decimals)
-    if b_less_dec == TRUE:
+    let (b_fewer_dec) = is_le(b_decimals, a_decimals)
+    if b_fewer_dec == TRUE:
         # x > y
         result_decimals = a_decimals
         tempvar range_check_ptr = range_check_ptr
