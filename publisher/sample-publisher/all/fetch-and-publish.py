@@ -30,16 +30,6 @@ async def publish_all(assets):
     publisher_client = EmpiricPublisherClient(publisher_private_key, publisher_address)
 
     try:
-        coingecko_entries = fetch_coingecko(assets, publisher)
-        await publisher_client.publish_many(coingecko_entries)
-        entries.extend(coingecko_entries)
-    except Exception as e:
-        print(f"Error fetching Coingecko price: {e}")
-        print(traceback.format_exc())
-        if exit_on_error:
-            raise e
-
-    try:
         coinbase_entries = fetch_coinbase(assets, publisher)
         await publisher_client.publish_many(coinbase_entries)
         entries.extend(coinbase_entries)
@@ -65,46 +55,6 @@ async def publish_all(assets):
         entries.extend(ftx_entries)
     except Exception as e:
         print(f"Error fetching FTX price: {e}")
-        print(traceback.format_exc())
-        if exit_on_error:
-            raise e
-
-    try:
-        cex_entries = fetch_cex(assets, publisher)
-        await publisher_client.publish_many(cex_entries)
-        entries.extend(cex_entries)
-    except Exception as e:
-        print(f"Error fetching CEX price: {e}")
-        print(traceback.format_exc())
-        if exit_on_error:
-            raise e
-
-    try:
-        bitstamp_entries = fetch_bitstamp(assets, publisher)
-        await publisher_client.publish_many(bitstamp_entries)
-        entries.extend(bitstamp_entries)
-    except Exception as e:
-        print(f"Error fetching Bitstamp price: {e}")
-        print(traceback.format_exc())
-        if exit_on_error:
-            raise e
-
-    try:
-        thegraph_entries = fetch_thegraph(assets, publisher)
-        await publisher_client.publish_many(thegraph_entries)
-        entries.extend(thegraph_entries)
-    except Exception as e:
-        print(f"Error fetching The Graph data: {e}")
-        print(traceback.format_exc())
-        if exit_on_error:
-            raise e
-
-    try:
-        cryptowatch_entries = fetch_cryptowatch(assets, publisher)
-        await publisher_client.publish_many(cryptowatch_entries)
-        entries.extend(cryptowatch_entries)
-    except Exception as e:
-        print(f"Error fetching Cryptowatch price: {e}")
         print(traceback.format_exc())
         if exit_on_error:
             raise e
