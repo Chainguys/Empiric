@@ -4,18 +4,13 @@ import traceback
 
 import requests
 from empiric.core.utils import pprint_entry
-from empiric.publisher.assets import EMPIRIC_ALL_ASSETS
+from empiric.publisher.assets import get_spot_asset_spec_for_key
 from empiric.publisher.client import EmpiricPublisherClient
 from empiric.publisher.fetch import (
-    fetch_bitstamp,
-    fetch_cex,
     fetch_coinbase,
-    fetch_coingecko,
-    fetch_cryptowatch,
     fetch_ftx,
     fetch_gemini,
 )
-from empiric.publisher.fetch.thegraph import fetch_thegraph
 
 
 async def publish_all(assets):
@@ -69,4 +64,11 @@ async def publish_all(assets):
 
 
 if __name__ == "__main__":
-    asyncio.run(publish_all(EMPIRIC_ALL_ASSETS))
+    asyncio.run(
+        publish_all(
+            [
+                get_spot_asset_spec_for_key("btc/usd"),
+                get_spot_asset_spec_for_key("eth/usd"),
+            ]
+        )
+    )
