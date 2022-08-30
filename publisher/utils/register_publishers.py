@@ -18,9 +18,7 @@ publisher_address = [
 
 async def main():
     admin_private_key = int(os.environ.get("ADMIN_PRIVATE_KEY"), 0)
-    admin_client = EmpiricAdminClient(
-        admin_private_key,
-    )
+    admin_client = EmpiricAdminClient(admin_private_key)
     for publisher, address in zip(publishers, publisher_address):
         await admin_client.register_publisher_if_not_registered(publisher, address)
 

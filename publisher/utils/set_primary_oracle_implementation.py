@@ -9,14 +9,9 @@ async def main():
     admin_client = EmpiricAdminClient(
         admin_private_key,
     )
-    if os.environ.get("__EMPIRIC_STAGING_ENV__") == "TRUE":
-        await admin_client.set_primary_oracle_implementation_address(
-            0x019BA8DB6B7749C359D9E0226723DCDF664AA7230E880D59166CBF649A518DD6
-        )
-    else:
-        await admin_client.set_primary_oracle_implementation_address(
-            0x05A88457F9292D0596090300713E80724631024E7A92989302D458271C98CAD4
-        )
+    await admin_client.set_primary_oracle_implementation_address(
+        0x037087CD9A886482EFF2192486785204A5CFE0A78496FFB0E0F2BF71F02F65E1
+    )
 
 
 if __name__ == "__main__":
