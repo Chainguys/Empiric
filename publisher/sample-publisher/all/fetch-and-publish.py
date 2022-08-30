@@ -6,11 +6,7 @@ import requests
 from empiric.core.utils import pprint_entry
 from empiric.publisher.assets import get_spot_asset_spec_for_key
 from empiric.publisher.client import EmpiricPublisherClient
-from empiric.publisher.fetch import (
-    fetch_coinbase,
-    fetch_ftx,
-    fetch_gemini,
-)
+from empiric.publisher.fetch import fetch_coinbase, fetch_ftx, fetch_gemini
 
 
 async def publish_all(assets):
