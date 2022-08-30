@@ -9,7 +9,7 @@ from starkware.starknet.common.syscalls import get_caller_address, get_block_tim
 
 from contracts.entry.library import Entry, Entry_aggregate_entries, Entry_aggregate_timestamps_max
 
-const TIMESTAMP_BUFFER = 3600  # 60 minutes
+const TIMESTAMP_BUFFER = 43200  # 12 hours
 
 #
 # Storage
