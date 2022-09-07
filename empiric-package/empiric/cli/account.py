@@ -1,6 +1,8 @@
 import configparser
 from pathlib import Path
 
+import typer
+
 from starknet_py.net import AccountClient, KeyPair
 from starknet_py.net.client import Client
 from starknet_py.net.gateway_client import GatewayClient
@@ -35,6 +37,6 @@ async def create_account(client: GatewayClient, config_file: Path):
 
     key_pair = KeyPair.from_private_key(account_private_key)
     address = await deploy_account_contract(client, key_pair.public_key)
-    print("created address:", address)
+    typer.echo("created address:", address)
 
     return SUCCESS

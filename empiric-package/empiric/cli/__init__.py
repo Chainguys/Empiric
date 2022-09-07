@@ -1,5 +1,4 @@
 __app_name__ = "empiric_cli"
-__version__ = "0.1.0"
 
 (
     SUCCESS,

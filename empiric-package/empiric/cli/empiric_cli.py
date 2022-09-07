@@ -45,7 +45,7 @@ def get_block(val: str = "NONE"):
     gateway_url, chain_id = config.validate_config()
 
     client = net.init_client(gateway_url, chain_id)
-    print(client.get_block_sync())
+    typer.echo(client.get_block_sync())
     return SUCCESS
 
 
