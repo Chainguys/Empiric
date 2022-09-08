@@ -67,16 +67,8 @@ end
 @view
 func get_sources_threshold{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
     key : felt, threshold : felt
-) -> (threshold: felt:
+) -> (threshold : felt):
     let (threshold) = Oracle.get_sources_threshold(key)
-    return (threshold)
-end
-
-@view
-func get_checkpoint_frequency_threshold{
-    syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
-}(key : felt) -> (threshold: felt):
-    let (threshold) = Oracle.get_checkpoint_frequency_threshold(key)
     return (threshold)
 end
 
@@ -113,15 +105,5 @@ func set_sources_threshold{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, ran
     Oracle.only_oracle_controller()
 
     Oracle.set_sources_threshold(key, threshold)
-    return ()
-end
-
-@external
-func set_checkpoint_frequency_threshold{
-    syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
-}(key : felt, threshold : felt):
-    Oracle.only_oracle_controller()
-
-    Oracle.set_checkpoint_frequency_threshold(key, threshold)
     return ()
 end

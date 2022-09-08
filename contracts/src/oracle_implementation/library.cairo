@@ -43,10 +43,6 @@ end
 func Oracle__sources_threshold(key : felt) -> (threshold : felt):
 end
 
-@storage_var
-func Oracle__checkpoint_frequency_threshold(key : felt) -> (threshold : felt):
-end
-
 namespace Oracle:
     #
     # Guards
@@ -150,9 +146,7 @@ namespace Oracle:
         let (frequency_threshold) = Oracle__checkpoint_frequency_threshold.read()
         let (meets_sources_threshold) = is_le(threshold, num_sources_aggregated)
         let (cur_checkpoint) = get_latest_checkpoint(key)
-        let (is_new_checkpoint) = is_le(
-            cur_checkpoint.timestamp + frequency_threshold, last_updated_timestamp
-        )
+        let (is_new_checkpoint) = is_le(cur_checkpoint.timestamp + 1, last_updated_timestamp)
         # if both are true
         if meets_sources_threshold + is_new_checkpoint == 2:
             let checkpoint = Checkpoint(
