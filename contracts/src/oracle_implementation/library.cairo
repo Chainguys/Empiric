@@ -39,6 +39,14 @@ end
 func Oracle__checkpoint_index(key : felt) -> (index : felt):
 end
 
+@storage_var
+func Oracle__sources_threshold(key : felt) -> (threshold : felt):
+end
+
+@storage_var
+func Oracle__checkpoint_frequency_threshold(key : felt) -> (threshold : felt):
+end
+
 namespace Oracle:
     #
     # Guards
@@ -105,9 +113,57 @@ namespace Oracle:
         return (sources_len, sources)
     end
 
+    func get_latest_checkpoint{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+        key : felt
+    ) -> (checkpoint : Checkpoint):
+        let (cur_ix) = Oracle__checkpoint_index.read(key)
+        let (cur_checkpoint) = Oracle__checkpoints.read(key, cur_ix - 1)
+        return (cur_checkpoint)
+    end
+
     #
     # Setters
     #
+
+    func set_sources_threshold{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+        key : felt, threshold : felt
+    ):
+        Oracle__sources_threshold.write(key, threshold)
+        return ()
+    end
+
+    func set_checkpoint_frequency_threshold{
+        syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
+    }(key : felt, threshold : felt):
+        Oracle__checkpoint_frequency_threshold.write(key, threshold)
+        return ()
+    end
+
+    func set_checkpoint{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+        key : felt, aggregation_mode : felt
+    ):
+        let (sources) = alloc()
+        let (value, decimals, last_updated_timestamp, num_sources_aggregated) = get_value(
+            key, aggregation_mode, 0, sources
+        )
+        let (sources_threshold) = Oracle__sources_threshold.read()
+        let (frequency_threshold) = Oracle__checkpoint_frequency_threshold.read()
+        let (meets_sources_threshold) = is_le(threshold, num_sources_aggregated)
+        let (cur_checkpoint) = get_latest_checkpoint(key)
+        let (is_new_checkpoint) = is_le(
+            cur_checkpoint.timestamp + frequency_threshold, last_updated_timestamp
+        )
+        # if both are true
+        if meets_sources_threshold + is_new_checkpoint == 2:
+            let checkpoint = Checkpoint(
+                last_updated_timestamp, value, aggregation_mode, num_sources_aggregated
+            )
+            let (cur_ix) = Oracle__checkpoint_index.read(key)
+            Oracle__checkpoints.write(key, cur_ix, checkpoint)
+            Oracle__checkpoint_index.write(key, cur_ix + 1)
+        end
+        return ()
+    end
 
     func set_oracle_controller_address{
         syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr

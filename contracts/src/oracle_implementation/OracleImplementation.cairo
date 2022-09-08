@@ -56,6 +56,30 @@ func get_all_sources{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_che
     return (sources_len, sources)
 end
 
+@view
+func get_latest_checkpoint{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    key : felt
+) -> (latest : Checkpoint):
+    let (latest) = Oracle.get_latest_checkpoint(key)
+    return (latest)
+end
+
+@view
+func get_sources_threshold{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    key : felt, threshold : felt
+) -> (threshold: felt:
+    let (threshold) = Oracle.get_sources_threshold(key)
+    return (threshold)
+end
+
+@view
+func get_checkpoint_frequency_threshold{
+    syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
+}(key : felt) -> (threshold: felt):
+    let (threshold) = Oracle.get_checkpoint_frequency_threshold(key)
+    return (threshold)
+end
+
 #
 # Setters
 #
@@ -73,5 +97,31 @@ func publish_entry{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check
     new_entry : Entry
 ):
     Oracle.publish_entry(new_entry)
+    return ()
+end
+
+@external
+func set_checkpoint{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(key : felt):
+    Oracle.set_checkpoint(key)
+    return ()
+end
+
+@external
+func set_sources_threshold{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    key : felt, threshold : felt
+):
+    Oracle.only_oracle_controller()
+
+    Oracle.set_sources_threshold(key, threshold)
+    return ()
+end
+
+@external
+func set_checkpoint_frequency_threshold{
+    syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
+}(key : felt, threshold : felt):
+    Oracle.only_oracle_controller()
+
+    Oracle.set_checkpoint_frequency_threshold(key, threshold)
     return ()
 end
