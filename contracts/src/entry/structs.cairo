@@ -7,3 +7,8 @@ struct Entry:
     member source : felt
     member publisher : felt
 end
+
+struct Checkpoint:
+    member timestamp : felt
+    member value : felt
+end
