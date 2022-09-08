@@ -3,7 +3,7 @@
 from starkware.cairo.common.cairo_builtins import HashBuiltin
 from starkware.cairo.common.bool import TRUE, FALSE
 
-from entry.structs import Entry
+from entry.structs import Entry, Checkpoint
 from oracle_implementation.library import Oracle
 
 #

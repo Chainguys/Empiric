@@ -128,13 +128,6 @@ namespace Oracle:
         return ()
     end
 
-    func set_checkpoint_frequency_threshold{
-        syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
-    }(key : felt, threshold : felt):
-        Oracle__checkpoint_frequency_threshold.write(key, threshold)
-        return ()
-    end
-
     func set_checkpoint{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
         key : felt, aggregation_mode : felt
     ):
@@ -143,7 +136,6 @@ namespace Oracle:
             key, aggregation_mode, 0, sources
         )
         let (sources_threshold) = Oracle__sources_threshold.read()
-        let (frequency_threshold) = Oracle__checkpoint_frequency_threshold.read()
         let (meets_sources_threshold) = is_le(threshold, num_sources_aggregated)
         let (cur_checkpoint) = get_latest_checkpoint(key)
         let (is_new_checkpoint) = is_le(cur_checkpoint.timestamp + 1, last_updated_timestamp)
