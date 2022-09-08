@@ -2,15 +2,12 @@ import configparser
 from pathlib import Path
 
 import typer
-
-from starknet_py.net import AccountClient, KeyPair
+from cli import SUCCESS
+from starknet_py.net import KeyPair
 from starknet_py.net.client import Client
 from starknet_py.net.gateway_client import GatewayClient
 from starknet_py.net.models.address import AddressRepresentation
-from starknet_py.net.models.chains import StarknetChainId
 from starknet_py.transactions.deploy import make_deploy_tx
-
-from cli import SUCCESS
 
 from .compiled_account_contract import COMPILED_ACCOUNT_CONTRACT
 

@@ -1,16 +1,7 @@
 from typing import Optional
 
 import typer
-
-from cli import (
-    ERRORS,
-    SUCCESS,
-    __app_name__,
-    account,
-    config,
-    contracts,
-    net,
-)
+from cli import SUCCESS, __app_name__, account, config, contracts, net
 
 from .utils import coro
 
@@ -36,7 +27,7 @@ async def create_account():
     gateway_url, chain_id = config.validate_config()
 
     client = net.init_client(gateway_url, chain_id)
-    response = await account.create_account(client, config.CONFIG_FILE_PATH)
+    await account.create_account(client, config.CONFIG_FILE_PATH)
     return SUCCESS
 
 
