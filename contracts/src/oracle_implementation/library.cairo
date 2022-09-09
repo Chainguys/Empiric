@@ -248,7 +248,7 @@ namespace Oracle:
         let (should_skip_entry) = is_not_zero(is_entry_stale + not_is_entry_initialized)
 
         if should_skip_entry == TRUE:
-            let (entries_len, entries) = Oracle_build_entries_array(
+            let (entries_len, entries) = build_entries_array(
                 key, sources_len, sources, sources_idx + 1, entries_idx, entries
             )
             return (entries_len, entries)
@@ -256,7 +256,7 @@ namespace Oracle:
 
         assert [entries + entries_idx * Entry.SIZE] = entry
 
-        let (entries_len, entries) = Oracle_build_entries_array(
+        let (entries_len, entries) = build_entries_array(
             key, sources_len, sources, sources_idx + 1, entries_idx + 1, entries
         )
         return (entries_len, entries)
