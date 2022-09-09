@@ -136,7 +136,7 @@ namespace Oracle:
             key, aggregation_mode, 0, sources
         )
         let (sources_threshold) = Oracle__sources_threshold.read()
-        let (meets_sources_threshold) = is_le(threshold, num_sources_aggregated)
+        let (meets_sources_threshold) = is_le(sources_threshold, num_sources_aggregated)
         let (cur_checkpoint) = get_latest_checkpoint(key)
         let (is_new_checkpoint) = is_le(cur_checkpoint.timestamp + 1, last_updated_timestamp)
         # if both are true
