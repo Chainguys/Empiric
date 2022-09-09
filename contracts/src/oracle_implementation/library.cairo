@@ -40,7 +40,7 @@ func Oracle__checkpoint_index(key : felt) -> (index : felt):
 end
 
 @storage_var
-func Oracle__sources_threshold(key : felt) -> (threshold : felt):
+func Oracle__sources_threshold() -> (threshold : felt):
 end
 
 namespace Oracle:
@@ -117,22 +117,29 @@ namespace Oracle:
         return (cur_checkpoint)
     end
 
+    func get_sources_threshold{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+        ) -> (threshold : felt):
+        let (threshold) = Oracle__sources_threshold.read()
+        return (threshold)
+    end
+
     #
     # Setters
     #
 
     func set_sources_threshold{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-        key : felt, threshold : felt
+        threshold : felt
     ):
-        Oracle__sources_threshold.write(key, threshold)
+        Oracle__sources_threshold.write(threshold)
         return ()
     end
 
     func set_checkpoint{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
         key : felt, aggregation_mode : felt
     ):
+        alloc_locals
         let (sources) = alloc()
-        let (value, decimals, last_updated_timestamp, num_sources_aggregated) = get_value(
+        let (value, last_updated_timestamp, num_sources_aggregated) = get_value(
             key, aggregation_mode, 0, sources
         )
         let (sources_threshold) = Oracle__sources_threshold.read()
@@ -147,6 +154,7 @@ namespace Oracle:
             let (cur_ix) = Oracle__checkpoint_index.read(key)
             Oracle__checkpoints.write(key, cur_ix, checkpoint)
             Oracle__checkpoint_index.write(key, cur_ix + 1)
+            return ()
         end
         return ()
     end

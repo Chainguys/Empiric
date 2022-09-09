@@ -24,6 +24,12 @@ namespace IOracleImplementation:
     func get_all_sources(key : felt) -> (sources_len : felt, sources : felt*):
     end
 
+    func get_latest_checkpoint(key : felt) -> (latest : Checkpoint):
+    end
+
+    func get_sources_threshold() -> (threshold : felt):
+    end
+
     #
     # Setters
     #
@@ -32,5 +38,11 @@ namespace IOracleImplementation:
     end
 
     func publish_entry(new_entry : Entry):
+    end
+
+    func set_checkpoint(key : felt, aggregation_mode : felt):
+    end
+
+    func set_sources_threshold(threshold : felt):
     end
 end

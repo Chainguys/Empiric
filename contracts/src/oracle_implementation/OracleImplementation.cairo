@@ -65,10 +65,10 @@ func get_latest_checkpoint{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, ran
 end
 
 @view
-func get_sources_threshold{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    key : felt, threshold : felt
-) -> (threshold : felt):
-    let (threshold) = Oracle.get_sources_threshold(key)
+func get_sources_threshold{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}() -> (
+    threshold : felt
+):
+    let (threshold) = Oracle.get_sources_threshold()
     return (threshold)
 end
 
@@ -93,17 +93,19 @@ func publish_entry{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check
 end
 
 @external
-func set_checkpoint{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(key : felt):
-    Oracle.set_checkpoint(key)
+func set_checkpoint{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
+    key : felt, aggregation_mode : felt
+):
+    Oracle.set_checkpoint(key, aggregation_mode)
     return ()
 end
 
 @external
 func set_sources_threshold{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(
-    key : felt, threshold : felt
+    threshold : felt
 ):
     Oracle.only_oracle_controller()
 
-    Oracle.set_sources_threshold(key, threshold)
+    Oracle.set_sources_threshold(threshold)
     return ()
 end
